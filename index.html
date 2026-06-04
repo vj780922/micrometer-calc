@@ -88,39 +88,63 @@
             display: none;
         }
 
+        /* ==========================================================================
+           關鍵修改：確保游標與文字在任何狀態下（含點擊時）皆緊貼右側，並去除原生箭頭干擾
+           ========================================================================== */
         input[type="number"] {
             width: 100%;
-            padding: 11px 8px;
+            padding: 11px 12px;
             border: 1.5px solid #e2e8f0;
             border-radius: 8px;
-            font-size: 15px; /* 防止 iOS 點擊時畫面自動縮放 */
+            font-size: 15px;
             box-sizing: border-box;
             outline: none;
-            text-align: right;
+            text-align: right; /* 平常狀態靠右 */
+            direction: ltr;    /* 確保數字與小數點輸入方向正確 */
             font-family: "Calibri", "Microsoft JhengHei";
             background-color: #eef5fc; 
             transition: all 0.2s;
+            -webkit-appearance: none; /* 移除 iOS 預設內陰影與外觀 */
+            appearance: none;
         }
 
-        /* 修改 Placeholder 顏色，讓 0.000 提示清晰可見 */
+        /* 強制點擊輸入框（Focus）時，游標與打字位置依然卡在最右側 */
+        input[type="number"]:focus {
+            border-color: #3182ce;
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+            text-align: right; /* 點擊時強制靠右 */
+        }
+
+        /* 修改 Placeholder 樣式，使其完美靠右對齊 */
         input[type="number"]::placeholder {
             color: #a0aec0;
             opacity: 0.8;
             text-align: right;
         }
 
-        input[type="number"]:focus {
-            border-color: #3182ce;
-            background-color: #fff;
-            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+        /* 徹底拔除網頁原生 type="number" 的上下調節小箭頭，避免其占用右側空間並卡住游標 */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield; /* 針對 Firefox 拔除箭頭 */
         }
 
-        /* 標準值輸入框專用（置中對齊） */
+        /* 標準值輸入框專用（維持視覺置中） */
         .std-val {
             text-align: center !important;
             font-weight: bold;
             background-color: #f7fafc;
             border-color: #cbd5e0;
+        }
+        .std-val:focus {
+            text-align: center !important;
+        }
+        .std-val::placeholder {
+            text-align: center !important;
         }
 
         .calc-res {
@@ -224,16 +248,6 @@
             background-color: #e2e8f0;
         }
 
-        /* 隱藏輸入框的上下調節箭頭 */
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type=number] {
-            -moz-appearance: textfield;
-        }
-
         /* ==========================================================================
            RWD 手機版樣式微調 (螢幕寬度小於 550px 時觸發)
            ========================================================================== */
@@ -313,4 +327,227 @@
         <div class="row-item od-row">
             <div class="input-group-mobile"><span class="mobile-label">標準值</span><input type="number" step="0.001" class="std-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
             <div class="input-group-mobile"><span class="mobile-label">量測值 1</span><input type="number" step="0.001" class="m1-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
-            <div class="input-group-mobile"><span class="mobile-label
+            <div class="input-group-mobile"><span class="mobile-label">量測值 2</span><input type="number" step="0.001" class="m2-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="input-group-mobile"><span class="mobile-label">量測值 3</span><input type="number" step="0.001" class="m3-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="calc-res waiting">等待數據輸入...</div>
+        </div>
+        <div class="row-item od-row">
+            <div class="input-group-mobile"><span class="mobile-label">標準值</span><input type="number" step="0.001" class="std-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="input-group-mobile"><span class="mobile-label">量測值 1</span><input type="number" step="0.001" class="m1-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="input-group-mobile"><span class="mobile-label">量測值 2</span><input type="number" step="0.001" class="m2-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="input-group-mobile"><span class="mobile-label">量測值 3</span><input type="number" step="0.001" class="m3-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="calc-res waiting">等待數據輸入...</div>
+        </div>
+        <div class="row-item od-row">
+            <div class="input-group-mobile"><span class="mobile-label">標準值</span><input type="number" step="0.001" class="std-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="input-group-mobile"><span class="mobile-label">量測值 1</span><input type="number" step="0.001" class="m1-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="input-group-mobile"><span class="mobile-label">量測值 2</span><input type="number" step="0.001" class="m2-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="input-group-mobile"><span class="mobile-label">量測值 3</span><input type="number" step="0.001" class="m3-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="calc-res waiting">等待數據輸入...</div>
+        </div>
+        <div class="row-item od-row">
+            <div class="input-group-mobile"><span class="mobile-label">標準值</span><input type="number" step="0.001" class="std-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="input-group-mobile"><span class="mobile-label">量測值 1</span><input type="number" step="0.001" class="m1-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="input-group-mobile"><span class="mobile-label">量測值 2</span><input type="number" step="0.001" class="m2-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="input-group-mobile"><span class="mobile-label">量測值 3</span><input type="number" step="0.001" class="m3-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="calc-res waiting">等待數據輸入...</div>
+        </div>
+        <div class="row-item od-row">
+            <div class="input-group-mobile"><span class="mobile-label">標準值</span><input type="number" step="0.001" class="std-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="input-group-mobile"><span class="mobile-label">量測值 1</span><input type="number" step="0.001" class="m1-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="input-group-mobile"><span class="mobile-label">量測值 2</span><input type="number" step="0.001" class="m2-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="input-group-mobile"><span class="mobile-label">量測值 3</span><input type="number" step="0.001" class="m3-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="calc-res waiting">等待數據輸入...</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <span class="section-label">平行度校正</span>
+        <div class="row-item para-row">
+            <div class="input-group-mobile"><span class="mobile-label">標準值</span><input type="number" step="0.001" class="std-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="para-span-3"><span class="mobile-label">量測值</span><input type="number" step="0.001" class="m1-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="calc-res waiting">等待數據輸入...</div>
+        </div>
+        <div class="row-item para-row">
+            <div class="input-group-mobile"><span class="mobile-label">標準值</span><input type="number" step="0.001" class="std-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="para-span-3"><span class="mobile-label">量測值</span><input type="number" step="0.001" class="m1-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="calc-res waiting">等待數據輸入...</div>
+        </div>
+        <div class="row-item para-row">
+            <div class="input-group-mobile"><span class="mobile-label">標準值</span><input type="number" step="0.001" class="std-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="para-span-3"><span class="mobile-label">量測值</span><input type="number" step="0.001" class="m1-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="calc-res waiting">等待數據輸入...</div>
+        </div>
+        <div class="row-item para-row">
+            <div class="input-group-mobile"><span class="mobile-label">標準值</span><input type="number" step="0.001" class="std-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="para-span-3"><span class="mobile-label">量測值</span><input type="number" step="0.001" class="m1-val" placeholder="0.000" oninput="calculate()" onblur="formatToThreeDecimals(this)"></div>
+            <div class="calc-res waiting">等待數據輸入...</div>
+        </div>
+
+        <div class="result-area">
+            <div class="result-line" style="margin-bottom: 12px;">
+                <span style="color: #4a5568;">允收標準設定</span>
+                <span class="tolerance-badge">± 0.002 mm</span>
+            </div>
+            <div class="result-line" style="border-top: 2px dashed #90cdf4; padding-top: 12px;">
+                <span style="color: #1a365d;">總體校正結果：</span>
+                <span id="final-judgment" class="final-status status-wait">等待數據輸入...</span>
+            </div>
+        </div>
+
+        <button class="clear-btn" onclick="clearAll()">重置清除所有數據</button>
+    </div>
+
+    <div class="footer-info">
+        <div>作者：Weiwei | 版本：v1.8.0 | 最後更新日期：2026/06/04</div>
+        <div>拜訪次數：<span class="visit-badge" id="visitCount">0</span></div>
+    </div>
+</div>
+
+<script>
+    window.onload = function() {
+        let count = localStorage.getItem('weiwei_micrometer_calc_visits') || 0;
+        count = parseInt(count) + 1;
+        localStorage.setItem('weiwei_micrometer_calc_visits', count);
+        document.getElementById('visitCount').innerText = count;
+    };
+
+    function roundTo(num, decimals) {
+        return Math.round((num + Number.EPSILON) * Math.pow(10, decimals)) / Math.pow(10, decimals);
+    }
+
+    function formatToThreeDecimals(input) {
+        if (input.value !== "") {
+            const num = parseFloat(input.value);
+            if (!isNaN(num)) {
+                input.value = num.toFixed(3);
+            }
+        }
+        calculate();
+    }
+
+    function calculate() {
+        let validErrorValues = [];
+        let totalRows = 0;
+        let completeRows = 0;
+
+        // 1. 處理外徑校正
+        const odRows = document.querySelectorAll('.od-row');
+        odRows.forEach(row => {
+            const stdVal = parseFloat(row.querySelector('.std-val').value);
+            const m1 = parseFloat(row.querySelector('.m1-val').value);
+            const m2 = parseFloat(row.querySelector('.m2-val').value);
+            const m3 = parseFloat(row.querySelector('.m3-val').value);
+            const resDiv = row.querySelector('.calc-res');
+
+            if (!isNaN(stdVal) || !isNaN(m1) || !isNaN(m2) || !isNaN(m3)) {
+                totalRows++;
+            } else {
+                resDiv.textContent = "等待數據輸入...";
+                resDiv.className = "calc-res waiting";
+                return;
+            }
+
+            if (isNaN(stdVal) || isNaN(m1) || isNaN(m2) || isNaN(m3)) {
+                resDiv.textContent = "等待數據輸入...";
+                resDiv.className = "calc-res waiting";
+                return;
+            }
+
+            completeRows++;
+            const average = (m1 + m2 + m3) / 3;
+            const errorVal = roundTo(average - stdVal, 4);
+
+            if (window.innerWidth <= 550) {
+                resDiv.innerHTML = `<span style="font-size:13px; color:#718096; font-weight:normal; float:left;">器差值：</span>${errorVal.toFixed(4)}`;
+            } else {
+                resDiv.textContent = errorVal.toFixed(4);
+            }
+            resDiv.className = "calc-res";
+            validErrorValues.push(errorVal);
+        });
+
+        // 2. 處理平行度校正
+        const paraRows = document.querySelectorAll('.para-row');
+        paraRows.forEach(row => {
+            const stdVal = parseFloat(row.querySelector('.std-val').value);
+            const m1 = parseFloat(row.querySelector('.m1-val').value);
+            const resDiv = row.querySelector('.calc-res');
+
+            if (!isNaN(stdVal) || !isNaN(m1)) {
+                totalRows++;
+            } else {
+                resDiv.textContent = "等待數據輸入...";
+                resDiv.className = "calc-res waiting";
+                return;
+            }
+
+            if (isNaN(stdVal) || isNaN(m1)) {
+                resDiv.textContent = "等待數據輸入...";
+                resDiv.className = "calc-res waiting";
+                return;
+            }
+
+            completeRows++;
+            const errorVal = roundTo(m1 - stdVal, 4);
+
+            if (window.innerWidth <= 550) {
+                resDiv.innerHTML = `<span style="font-size:13px; color:#718096; font-weight:normal; float:left;">器差值：</span>${errorVal.toFixed(4)}`;
+            } else {
+                resDiv.textContent = errorVal.toFixed(4);
+            }
+            resDiv.className = "calc-res";
+            validErrorValues.push(errorVal);
+        });
+
+        // 3. 總體判定邏輯
+        const judgmentEl = document.getElementById('final-judgment');
+        
+        if (validErrorValues.length === 0) {
+            judgmentEl.textContent = "等待數據輸入...";
+            judgmentEl.className = "final-status status-wait";
+            return;
+        }
+
+        const maxError = Math.max(...validErrorValues);
+        const minError = Math.min(...validErrorValues);
+
+        const roundedMax = roundTo(maxError, 4);
+        const roundedMin = roundTo(minError, 4);
+
+        if (roundedMax <= 0.002 && roundedMin >= -0.002) {
+            if (completeRows < totalRows) {
+                judgmentEl.textContent = "合格 (尚有項目未填寫)";
+                judgmentEl.className = "final-status status-pass";
+                judgmentEl.style.fontSize = "16px";
+            } else {
+                judgmentEl.textContent = "合格";
+                judgmentEl.className = "final-status status-pass";
+                judgmentEl.style.fontSize = "22px";
+            }
+        } else {
+            judgmentEl.textContent = "不合格";
+            judgmentEl.className = "final-status status-fail";
+            judgmentEl.style.fontSize = "22px";
+        }
+    }
+
+    window.addEventListener('resize', calculate);
+
+    function clearAll() {
+        document.querySelectorAll('.row-item input[type="number"]').forEach(input => {
+            input.value = "";
+        });
+        document.querySelectorAll('.calc-res').forEach(div => {
+            div.textContent = "等待數據輸入...";
+            div.className = "calc-res waiting";
+        });
+        const judgmentEl = document.getElementById('final-judgment');
+        judgmentEl.textContent = "等待數據輸入...";
+        judgmentEl.className = "final-status status-wait";
+        judgmentEl.style.fontSize = "18px";
+    }
+</script>
+
+</body>
+</html>
