@@ -294,7 +294,7 @@
 
         <span class="section-label">外徑校正</span>
         <div class="row-item od-row" data-std="0.05">
-            <div class="input-group-mobile"><span class="mobile-label">標準值</span><input type="text" class="std-input" value="0.05" dashed readonly></div>
+            <div class="input-group-mobile"><span class="mobile-label">標準值</span><input type="text" class="std-input" value="0.05" readonly></div>
             <div class="input-group-mobile"><span class="mobile-label">量測值 1</span><input type="text" class="m1-val" oninput="calculate()" onblur="formatToThreeDecimals(this)" placeholder="0.000"></div>
             <div class="input-group-mobile"><span class="mobile-label">量測值 2</span><input type="text" class="m2-val" oninput="calculate()" onblur="formatToThreeDecimals(this)" placeholder="0.000"></div>
             <div class="input-group-mobile"><span class="mobile-label">量測值 3</span><input type="text" class="m3-val" oninput="calculate()" onblur="formatToThreeDecimals(this)" placeholder="0.000"></div>
@@ -375,7 +375,7 @@
     </div>
 
     <div class="footer-info">
-        <div>作者：Weiwei | 版本：v1.4.0 | 最後更新日期：2026/06/04</div>
+        <div>作者：Weiwei | 版本：v1.5.0 | 最後更新日期：2026/06/04</div>
         <div>拜訪次數：<span class="visit-badge" id="visitCount">0</span></div>
     </div>
 </div>
@@ -400,7 +400,6 @@
         let val = input.value.trim();
         if (val === "") return;
         
-        // 移除非數字與非小數點的字元
         let num = parseFloat(val);
         if (!isNaN(num)) {
             input.value = num.toFixed(3);
@@ -507,7 +506,7 @@
     // 監聽視窗調整
     window.addEventListener('resize', calculate);
 
-    // 重置清除按鈕
+    // 重置清除按鈕 (只清除使用者填寫的量測值，保留標準預設值)
     function clearAll() {
         document.querySelectorAll('.row-item input[type="text"]').forEach(input => {
             if (!input.readOnly) {
