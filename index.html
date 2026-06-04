@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分厘卡校正器差值計算器</title>
+    <style>
+        body {
+            font-family: "Calibri", "Microsoft JhengHei", sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .notice {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 6px 4px;
+            font-size: 15px;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .input-cell {
+            background-color: #d9e1f2;
+        }
+        input[type="number"] {
+            width: 90%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-size: 15px;
+            font-family: "Calibri", "Microsoft JhengHei", sans-serif;
+        }
+        input[type="number"]:focus {
+            outline: none;
+            background-color: #b4c6e7;
+        }
+        /* 隱藏輸入框的上下箭頭 */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+        .pass {
+            color: #008000;
+            font-weight: bold;
+        }
+        .fail {
+            color: #ff0000;
+            font-weight: bold;
+        }
+        .standard-note {
+            float: right;
+            background-color: #fff2cc;
+            border: 1px solid #d6b656;
+            padding: 5px 10px;
+            font-weight: bold;
+            font-size: 15px;
+            margin-top: 5px;
+        }
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="notice">※請僅填寫藍色儲存格，其餘公式及內容請勿修改。</div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 12%;">項目</th>
+                <th style="width: 12%;">標準值</th>
+                <th colspan="3" style="width: 42%;">量測值</th>
+                <th style="width: 18%;">器差值</th>
+                <th style="width: 16%;">校正結果</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="6" style="font-weight: bold;">外徑校正</td>
+                <td>0.05</td>
+                <td class="input-cell"><input type="number" step="0.001" class="od-m" data-std="0.05" value="0.050"></td>
+                <td class="input-cell"><input type="number" step="0.001" class="od-m" data-std="0.05" value="0.050"></td>
+                <td class="input-cell"><input type="number" step="0.001" class="od-m" data-std="0.05" value="0.050"></td>
+                <td class="od-diff">0.0000</td>
+                <td rowspan="6" id="od-result" class="pass">合格</td>
+            </tr>
+            <tr>
+                <td>0.1</td>
+                <td class="input-cell"><input type="number" step="0.001" class="od-m" data-std="0.1" value="0.099"></td>
+                <td class="input-cell"><input type="number" step="0.001" class="od-m" data-std="0.1" value="0.100"></td>
+                <td class="input-cell"><input type="number" step="0.001" class="od-m" data-std="0.1" value="0.099"></td>
+                <td class="od-diff">-0.0007</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td class="input-cell"><input type="number" step="0.001" class="od-m" data-std="1" value="1.000"></td>
+                <td class="input-cell"><input type="number" step="0.001" class="od-m" data-std="1" value="0.998"></td>
+                <td class="input-cell"><input type="number" step="0.001" class="od-m" data-std="1" value="1.002"></td>
+                <td class="od-diff">0.0000</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td class="input-cell"><input type="number" step="0.001" class="od-m" data-std="5" value="4.999"></td>
+                <td class="input-cell"><input type="number" step="0.001" class="od-m" data-std="5" value="5.002"></td>
+                <td class="input-cell"><input type="number" step="0.001" class="od-m" data-std="5" value="5.002"></td>
+                <td class="od-diff">0.0010</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td class="input-cell"><input type="number" step="0.001" class="od-m" data-std="10" value="10.001"></td>
+                <td class="input-cell"><input type="number" step="0.001" class="od-m" data-std="10" value="10.000"></td>
+                <td class="input-cell"><input type="number" step="0.001" class="od-m" data-std="10" value="10.000"></td>
+                <td class="od-diff">0.0003</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td class="input-cell"><input type="number" step="0.001" class="od-m" data-std="20" value="20.002"></td>
+                <td class="input-cell"><input type="number" step="0.001" class="od-m" data-std="20" value="20.002"></td>
+                <td class="input-cell"><input type="number" step="0.001" class="od-m" data-std="20" value="20.002"></td>
+                <td class="od-diff">0.0020</td>
+            </tr>
+            
+            <tr>
+                <td rowspan="4" style="font-weight: bold;">平行度校正</td>
+                <td rowspan="4">10</td>
+                <td colspan="3" class="input-cell"><input type="number" step="0.001" class="para-m" data-std="10" value="10.001"></td>
+                <td class="para-diff">0.0010</td>
+                <td rowspan="4" id="para-result" class="pass">合格</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="input-cell"><input type="number" step="0.001" class="para-m" data-std="10" value="9.998"></td>
+                <td class="para-diff">-0.0020</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="input-cell"><input type="number" step="0.001" class="para-m" data-std="10" value="10.000"></td>
+                <td class="para-diff">0.0000</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="input-cell"><input type="number" step="0.001" class="para-m" data-std="10" value="10.001"></td>
+                <td class="para-diff">0.0010</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="clearfix">
+        <div class="standard-note">允收標準：± 0.002 mm</div>
+    </div>
+</div>
+
+<script>
+    // 精確的四捨五入函數 (避免 JS 浮點數誤差，等同 Excel ROUND)
+    function roundTo(num, decimals) {
+        return Math.round((num + Number.EPSILON) * Math.pow(10, decimals)) / Math.pow(10, decimals);
+    }
+
+    function calculate() {
+        // --- 1. 外徑校正計算 ---
+        const odRows = [0.05, 0.1, 1, 5, 10, 20];
+        const odDiffCells = document.querySelectorAll('.od-diff');
+        const odInputs = document.querySelectorAll('.od-m');
+        
+        let odAllPass = true;
+        let odMaxDiff = -Infinity;
+        let odMinDiff = Infinity;
+
+        odRows.forEach((std, rowIndex) => {
+            let sum = 0;
+            let count = 0;
+            
+            // 抓取每一列的 3 個量測值
+            for (let i = 0; i < 3; i++) {
+                const inputIdx = rowIndex * 3 + i;
+                const val = parseFloat(odInputs[inputIdx].value);
+                if (!isNaN(val)) {
+                    sum += val;
+                    count++;
+                }
+            }
+            
+            if (count > 0) {
+                const avg = sum / count;
+                // 器差值 = 平均值 - 標準值 (四捨五入到第4位)
+                const diff = roundTo(avg - std, 4);
+                
+                // 顯示器差值格式化為 4 位小數
+                odDiffCells[rowIndex].innerText = diff.toFixed(4);
+                
+                // 紀錄最大與最小值以供最後外徑總判定 (比照 Excel 邏輯)
+                if (diff > odMaxDiff) odMaxDiff = diff;
+                if (diff < odMinDiff) odMinDiff = diff;
+            } else {
+                odDiffCells[rowIndex].innerText = "0.0000";
+            }
+        });
+
+        // 判斷外徑校正結果
+        const odMaxRound = roundTo(odMaxDiff, 4);
+        const odMinRound = roundTo(odMinDiff, 4);
+        const odResultCell = document.getElementById('od-result');
+        
+        if (odMaxRound <= 0.002 && odMinRound >= -0.002) {
+            odResultCell.innerText = "合格";
+            odResultCell.className = "pass";
+        } else {
+            odResultCell.innerText = "不合格";
+            odResultCell.className = "fail";
+        }
+
+        // --- 2. 平行度校正計算 ---
+        const paraInputs = document.querySelectorAll('.para-m');
+        const paraDiffCells = document.querySelectorAll('.para-diff');
+        
+        let paraMaxDiff = -Infinity;
+        let paraMinDiff = Infinity;
+
+        paraInputs.forEach((input, index) => {
+            const std = parseFloat(input.getAttribute('data-std'));
+            const val = parseFloat(input.value);
+            
+            if (!isNaN(val)) {
+                // 器差值 = ROUND(量測值 - 標準值, 4)
+                const diff = roundTo(val - std, 4);
+                paraDiffCells[index].innerText = diff.toFixed(4);
+                
+                if (diff > paraMaxDiff) paraMaxDiff = diff;
+                if (diff < paraMinDiff) paraMinDiff = diff;
+            } else {
+                paraDiffCells[index].innerText = "0.0000";
+            }
+        });
+
+        // 判斷平行度校正結果
+        const paraMaxRound = roundTo(paraMaxDiff, 4);
+        const paraMinRound = roundTo(paraMinDiff, 4);
+        const paraResultCell = document.getElementById('para-result');
+        
+        if (paraMaxRound <= 0.002 && paraMinRound >= -0.002) {
+            paraResultCell.innerText = "合格";
+            paraResultCell.className = "pass";
+        } else {
+            paraResultCell.innerText = "不合格";
+            paraResultCell.className = "fail";
+        }
+    }
+
+    // 監聽所有輸入框的即時變更
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('input', calculate);
+    });
+
+    // 初始執行一次
+    window.onload = calculate;
+</script>
+
+</body>
+</html>
